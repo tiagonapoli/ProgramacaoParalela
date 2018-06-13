@@ -1,24 +1,33 @@
 #include <stdio.h>
 #include <math.h>
 
-void add(int n, float* x, float* y) {
-    for(int i=0;i<n;i++) {
-        y[i] = x[i] + y[i];
-    }
+__global__ void add(int n, float* x, float* y) {
+	int tid = threadIdx.x + blockIdx.x * blockDim.x;
+	int pulo = gridDim.x * blockDim.x;
+	for(int i=tid;i < n; i += pulo) {
+		y[i] = x[i] + y[i];
+	}
 }
 
-int main() {
-    int n = 1 << 20;
 
-    float *x = new float[n];
-    float *y = new float[n];
+int main() {
+    int n = 1 << 25;
+	
+    float *x,*y;
+    cudaMallocManaged(&x, n*sizeof(float));
+    cudaMallocManaged(&y, n*sizeof(float));
+
 
     for(int i=0;i<n;i++) {
         x[i] = 1.0f;
         y[i] = 2.0f;
     }
 
-    add(n,x,y);
+	int block_size = 128;
+	int num_blocks = 4096;
+    add<<<num_blocks, block_size>>>(n,x,y);
+
+    cudaDeviceSynchronize();
 
     float error = 0.0f;
     for(int i=0;i<n;i++) {
@@ -26,8 +35,8 @@ int main() {
     }
     printf("Max error: %f\n", error);
 
-    delete [] x;
-    delete [] y;   
+    cudaFree(x);
+    cudaFree(y);
 
     return 0;
 }

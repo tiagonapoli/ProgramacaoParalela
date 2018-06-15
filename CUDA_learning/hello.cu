@@ -1,23 +1,15 @@
 #include <stdio.h>
 #include <assert.h>
-#include <cuda_runtime.h>
-#include <helper_functions.h>
 #include <helper_cuda.h>
 
-#ifndef MAX
-#define MAX(a,b) (a > b ? a : b)
-#endif
-
-__global__ void testKernel(int val)
-{
+__global__ void testKernel(int val) {
     printf("[%d, %d]:\t\tValue is:%d\n",\
             blockIdx.y*gridDim.x+blockIdx.x,\
             threadIdx.z*blockDim.x*blockDim.y+threadIdx.y*blockDim.x+threadIdx.x,\
             val);
 }
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     int devID;
     cudaDeviceProp props;
 
@@ -39,6 +31,6 @@ int main(int argc, char **argv)
     testKernel<<<dimGrid, dimBlock>>>(10);
     cudaDeviceSynchronize();
 
-    return EXIT_SUCCESS;
+	return 0;
 }
 

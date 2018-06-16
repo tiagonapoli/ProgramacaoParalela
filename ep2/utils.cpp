@@ -1,14 +1,17 @@
+#pragma once
 #include <stdlib.h>
 #include <stdio.h>
 
-inline int min(int a, int b) {
+inline int min_seq(int a, int b) {
 	return a < b ? a : b;
 }
 
 int next_pot(int x) {
+	if(x == 0) return 0;
     while(__builtin_popcount(x) > 1) {
         x += x & (-x);
     }
+	while(x < 64) x *= 2;
     return x;
 }
 

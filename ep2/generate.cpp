@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <limits.h>
 
 void write(const char* path, int ***x, int n) {
     FILE *f = fopen(path, "w");
@@ -17,7 +18,7 @@ void write(const char* path, int ***x, int n) {
     fclose(f);
 }
 
-void generate(int n, int lim) {
+void generate(int n) {
     int ***x;
     
     x = (int***) malloc(n * sizeof(int**));
@@ -44,7 +45,7 @@ void generate(int n, int lim) {
     for(int i=0;i<n;i++) {
         for(int j=0;j<3;j++) {
             for(int k=0;k<3;k++) {
-                x[i][j][k] = rand() % lim;
+                x[i][j][k] = rand();
             }
         }
     }
@@ -61,15 +62,13 @@ void generate(int n, int lim) {
 
 int main(int argc, char** argv) {
 
-    int n, lim;
+    int n;
 
-    if(argc < 3) {
-        printf("Usage: ./generate qtd_de_matrizes limite_para_os_inteiros\n");
+    if(argc < 2) {
+        printf("Usage: ./generate qtd_de_matrizes\n");
         exit(0);
     }
     
     sscanf(argv[1], "%d", &n);
-    sscanf(argv[2], "%d", &lim);
-
-    generate(n,lim);
+    generate(n);
 }

@@ -3,7 +3,14 @@
         "tuple": "cpp",
         "type_traits": "cpp",
         "utility": "cpp",
+<<<<<<< HEAD
         "cstdio": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
+=======
+        "cstdio": "cpp",
+        "__locale": "cpp",
+        "iostream": "cpp"
+    }
+>>>>>>> 8b75ab899d85754b7f0842eff80965ebcb35b937
 }

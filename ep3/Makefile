@@ -15,7 +15,7 @@ pthreads.o: pthreads.cpp
 	$(CC) -c $^ 
 
 utils.o: utils.cpp utils.h
-	$(CC) -c $^ 
+	$(CC) -c utils.cpp 
 
 clean: 
 	rm *.o 

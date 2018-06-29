@@ -2,10 +2,19 @@ all: sequencial pthreads
 
 CC=g++ -Wall -pthread 
 
-sequencial: sequencial.o utils.o utils.h
+sequencial: sequencial.o utils.o
 	$(CC) $^ -o $@
 
-utils.o: utils.cpp
+sequencial.o: sequencial.cpp
+	$(CC) -c $^ 
+
+pthreads: pthreads.o utils.o
+	$(CC) $^ -o $@
+
+pthreads.o: pthreads.cpp
+	$(CC) -c $^ 
+
+utils.o: utils.cpp utils.h
 	$(CC) -c $^ 
 
 clean: 

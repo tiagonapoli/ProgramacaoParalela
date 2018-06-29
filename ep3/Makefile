@@ -1,22 +1,12 @@
 all: sequencial pthreads
 
-UNAME_S := $(shell uname -s)
+CC=g++ -Wall -pthread 
 
-#ifeq ($(UNAME_S),Linux)
-	CC=g++ -Wall -pthread 
-#endif
-#ifeq ($(UNAME_S),Darwin)
-	#CC=g++-7 -pthread
-#endif
-
-sequencial: sequencial.o utils.o 
+sequencial: sequencial.o utils.o utils.h
 	$(CC) $^ -o $@
 
-sequencial.o: sequencial.cpp utils.o
-	$(CC) $^ -o $@
-
-utils.o: utils.cpp utils.h
-	$(CC) $^ -o $@
+utils.o: utils.cpp
+	$(CC) -c $^ 
 
 clean: 
-	rm *.o
+	rm *.o 

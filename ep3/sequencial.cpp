@@ -1,5 +1,5 @@
 #include "utils.h"
-// TODO: passar para long long
+
 
 pff sequencial(ll n, int m, int k) {
     srand(time(NULL));
@@ -13,10 +13,11 @@ pff sequencial(ll n, int m, int k) {
         sum2 += f_x * f_x;
     }
 
-    return calc_res(sum, sum2);
+    return calc_res(n, sum, sum2);
 }
 
+
 int main() {
-    pff ans = sequencial(100000, 2, 100);
-    printf("plus %lf minus %lf\n", ans.first, ans.second);
+
+
 }

@@ -55,5 +55,5 @@ pff pthreads(int n, int m, int k, const int num_threads) {
         sum2 += td[i].sum2;
     }
 
-    return calc_res(sum, sum2);
+    return calc_res(n, sum, sum2);
 }

@@ -17,6 +17,6 @@ inline float calcula_erro_resposta(float result, int m, int k) {
     return fabs(result);
 }
 
-void testa_corretude(int testes, bool verbose, void (*func_to_test)(ll, int, int));
+double testa_corretude(int testes, ll iter, float eps, pff (*func_to_test)(ll, int, int), bool verbose);
 
 pff calc_res(ll n, float sum, float sum2);

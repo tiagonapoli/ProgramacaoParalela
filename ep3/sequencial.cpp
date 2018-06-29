@@ -6,8 +6,11 @@ pff sequencial(ll n, int m, int k) {
     float sum = 0.;
     float sum2 = 0.;
     float x, f_x;
+    int aux;
     for (ll i = 0; i < n; i++) {
-        x = (rand() / (2.0 * (float)RAND_MAX));
+        aux = rand();
+        while(aux == 0) aux = rand();
+        x = (aux / (2.0 * (float)RAND_MAX));
         f_x = f(m, k, x);
         sum += f_x;
         sum2 += f_x * f_x;
@@ -18,6 +21,6 @@ pff sequencial(ll n, int m, int k) {
 
 
 int main() {
-
-
+    double porcentagem_acerto = testa_corretude(1000, 16000000, 1e-2, sequencial, false);
+    printf("Acerto: %lf%%\n", porcentagem_acerto * 100.0);
 }

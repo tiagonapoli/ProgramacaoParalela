@@ -4,5 +4,6 @@
         "type_traits": "cpp",
         "utility": "cpp",
         "cstdio": "cpp"
-    }
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
 }

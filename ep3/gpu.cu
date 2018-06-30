@@ -3,10 +3,11 @@
 #include <cuda.h>
 #include <curand_kernel.h>
 
-const int NUM_THREADS = 32;
+const int NUM_THREADS = 64;
 
+__constant__ float d_PI = 3.14159265359;
 __device__ inline float f_device(int m, int k, float x) {
-    return sin((2 * m + 1) * PI * x) * cos(2 * PI * k * x) / sin(PI * x);
+    return sin((2 * m + 1) * d_PI * x) * cos(2 * d_PI * k * x) / sin(d_PI * x);
 }
 
 __global__ void partial_sum(int n, int m, int k, float *sum_block, float *sum2_block) {
@@ -19,6 +20,7 @@ __global__ void partial_sum(int n, int m, int k, float *sum_block, float *sum2_b
     __shared__ float sum2[NUM_THREADS];
 
 	int tid = threadIdx.x;
+	//printf("%d -> %d responsible: %d\n", threadIdx.x + blockIdx.x * blockDim.x, blockIdx.x, (n+NUM_THREADS-1)/NUM_THREADS);
     curandState state;
     /* Each thread gets same seed, a different sequence number, no offset. */
     curand_init(0, NUM_THREADS * blockIdx.x + threadIdx.x, 0, &state);	
@@ -27,7 +29,7 @@ __global__ void partial_sum(int n, int m, int k, float *sum_block, float *sum2_b
     float sum2_thread = 0.;
     float x, f_x;
     for (int i = 0; i < (n + NUM_THREADS - 1) / NUM_THREADS; i++) {
-        x = curand_uniform() / 2.0;
+        x = curand_uniform(&state) / 2.0;
         f_x = f_device(m, k, x);
         sum_thread += f_x;
         sum2_thread += f_x * f_x;
@@ -61,8 +63,8 @@ __global__ void partial_sum(int n, int m, int k, float *sum_block, float *sum2_b
 }
 
 pff gpu(ll n, int m, int k) {
-	int num_blocks = (n + 2 * threads - 1)/ (2 * threads);
-	
+	int num_blocks = 1024;
+
     float *d_sum_block;
     float *d_sum2_block;
     float *h_sum_block;
@@ -97,6 +99,6 @@ pff gpu(ll n, int m, int k) {
 }
 
 int main() {
-    double porcentagem_acerto = testa_corretude(50, 32000000, 5e-3, gpu, true);
+    double porcentagem_acerto = testa_corretude(200, 32000000000, 5e-3, gpu, true);
     printf("Acerto: %lf%%\n", porcentagem_acerto * 100.0);
 }

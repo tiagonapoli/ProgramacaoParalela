@@ -18,7 +18,7 @@ utils.o: utils.cpp utils.h
 	$(CC) -c utils.cpp 
 
 gpu: gpu.cu utils.o
-	nvcc -I inc/ -o gpu gpu.cu
+	nvcc -I inc/ -o gpu gpu.cu utils.o
 
 clean:
 	rm *.o main sequencial pthreads gpu

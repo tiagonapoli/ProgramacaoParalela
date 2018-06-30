@@ -4,17 +4,28 @@
 #include<cmath>
 #include<utility>
 #include<ctime>
+#include <chrono>
 using namespace std;
 typedef pair<float, float> pff;
 typedef long long ll;
 const float PI = acos(-1);
+
+struct cronometro {
+    chrono::high_resolution_clock::time_point t1;
+    chrono::high_resolution_clock::time_point t2;
+    chrono::duration<double> time_span;
+
+    void set_initial_time();
+    void set_final_time();
+    double get_ms_past();
+};
 
 inline float f(int m, int k, float x) {
     return sin((2 * m + 1) * PI * x) * cos(2 * PI * k * x) / sin(PI * x);
 }
 
 inline float calcula_erro_resposta(float result, int m, int k) {
-    if(abs(k) <= abs(m)) return fabs(1.0 - result);
+    if(abs(k) <= abs(m)) return (m >= 0) ? fabs(1.0 - result) : fabs(-1.0 - result);
     return fabs(result);
 }
 

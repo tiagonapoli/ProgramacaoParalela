@@ -8,9 +8,6 @@ sequencial: sequencial.o utils.o
 sequencial.o: sequencial.cpp
 	$(CC) -c $^ 
 
-utils.o: utils.cpp
-	$(CC) -c $^ 
-
 pthreads: pthreads.o utils.o
 	$(CC) $^ -o $@
 
@@ -22,3 +19,6 @@ utils.o: utils.cpp utils.h
 
 clean: 
 	rm *.o 
+
+clean_all:
+	rm *.o sequencial pthreads

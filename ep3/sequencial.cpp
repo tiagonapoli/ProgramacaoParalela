@@ -21,6 +21,6 @@ pff sequencial(ll n, int m, int k) {
 
 
 int main() {
-    double porcentagem_acerto = testa_corretude(1000, 16000000, 1e-2, sequencial, false);
+    double porcentagem_acerto = testa_corretude(50, 16000000, 5e-3, sequencial, true);
     printf("Acerto: %lf%%\n", porcentagem_acerto * 100.0);
 }

@@ -1,4 +1,4 @@
-all: sequencial pthreads
+all: sequencial pthreads gpu
 
 CC=g++ -Wall -pthread 
 
@@ -17,8 +17,8 @@ pthreads.o: pthreads.cpp
 utils.o: utils.cpp utils.h
 	$(CC) -c utils.cpp 
 
-clean: 
-	rm *.o 
+gpu: gpu.cu utils.o
+	nvcc -I inc/ -o gpu gpu.cu
 
-clean_all:
-	rm *.o sequencial pthreads
+clean:
+	rm *.o main sequencial pthreads gpu

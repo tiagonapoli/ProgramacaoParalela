@@ -1,27 +1,32 @@
-CC=g++ -Wall -pthread 
-H_PATH=headers/
-IMP_PATH=./implementacoes
+FLAGS_NVCC = -I inc/ -I headers/  
+FLAGS = -Wall -pthread -I inc/ -I headers/ -lcudart -L /usr/local/cuda/lib64 
+H_PATH=headers
+IMP_PATH=implementacoes
+
+tester: tester.cpp pthreads.o 
+	mpic++ $(FLAGS) $^ -o $@
 
 main: main.o utils.o sequencial.o pthreads.o gpu.o 
-	mpic++ -pthread -lcudart -L /usr/local/cuda/lib64/ $^ -o $@
+	mpic++ $(FLAGS) $^ -o $@
+
 
 main.o: main.cpp
-	mpic++ -I $(H_PATH) -c $^ 
+	mpic++ $(FLAGS) -c $^ 
 
-sequencial.o: $(IMP_PATH)/sequencial.cpp
-	$(CC) -I $(H_PATH) -c $^ 
+balanceado.o: $(IMP_PATH)/balanceado.cpp $(H_PATH)/balanceado.h
+	mpic++ $(FLAGS) -c $<
 
-pthreads.o: ./implementacoes/pthreads.cpp  ./headers/pthreads.h
-	$(CC) -I $(H_PATH) -c pthreads.cpp 
+sequencial.o: $(IMP_PATH)/sequencial.cpp $(H_PATH)/sequencial.h
+	g++ $(FLAGS) -c $< 
 
-utils.o: ./implementacoes/utils.cpp ./headers/utils.h
-	$(CC) -I $(H_PATH) -c ./implementacoes/utils.cpp 
+gpu.o: $(IMP_PATH)/gpu.cu $(H_PATH)/gpu.h
+	nvcc $(FLAGS_NVCC) -c $<
 
-gpu: gpu.o utils.o
-	nvcc -o gpu gpu.o utils.o
+pthreads.o: $(IMP_PATH)/pthreads.cpp  $(H_PATH)/pthreads.h
+	g++ $(FLAGS) -c $< 
 
-gpu.o: ./implementacoes/gpu.cu ./headers/gpu.h
-	nvcc -I inc/ -c ./implementacoes/gpu.cu
+utils.o: $(IMP_PATH)/utils.cpp $(H_PATH)/utils.h
+	g++ $(FLAGS) -c $<
 
 clean:
-	rm *.o main sequencial pthreads gpu
+	rm *.o main tester

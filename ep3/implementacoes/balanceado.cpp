@@ -7,7 +7,7 @@
 
 pff balanceado(ll n, int m, int k) {
 // Initialize the MPI environment
-    MPI_Init(NULL, NULL);
+/*    MPI_Init(NULL, NULL);
     // Find out rank, size
     int world_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
@@ -16,7 +16,7 @@ pff balanceado(ll n, int m, int k) {
 
     // We are assuming at least 2 processes for this task
     if (world_size != 2) {
-        fprintf(stderr, "O numero de computadores deve ser 2 para %s\n", argv[0]);
+        fprintf(stderr, "O numero de computadores deve ser 2\n");
         MPI_Abort(MPI_COMM_WORLD, 1);
     }
 
@@ -37,7 +37,8 @@ pff balanceado(ll n, int m, int k) {
         }
     }
     MPI_Finalize();
-
+*/
+	return {0.0,0.0};
 }
 
 void balanceado_tester() {

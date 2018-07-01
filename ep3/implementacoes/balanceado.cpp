@@ -5,7 +5,7 @@
 #include "utils.h"
 #include "pthreads.h"
 
-pff mpi_calc(ll n, int m, int k) {
+pff balanceado(ll n, int m, int k) {
 // Initialize the MPI environment
     MPI_Init(NULL, NULL);
     // Find out rank, size
@@ -37,5 +37,9 @@ pff mpi_calc(ll n, int m, int k) {
         }
     }
     MPI_Finalize();
+
+}
+
+void balanceado_tester() {
 
 }

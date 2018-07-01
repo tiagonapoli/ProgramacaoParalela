@@ -19,9 +19,9 @@ pff sequencial(ll n, int m, int k) {
     return calc_res(n, sum, sum2);
 }
 
-/*
-int main() {
+
+void seq_tester() {
     double porcentagem_acerto = testa_corretude(50, 16000000, 5e-3, sequencial, true);
     printf("Acerto: %lf%%\n", porcentagem_acerto * 100.0);
 }
-*/
+

@@ -1,5 +1,5 @@
 #include "utils.h"
-#include "pthread.h"
+#include <sys/sysinfo.h>
 
 struct thread_data {
 	int id, m, k;
@@ -70,10 +70,12 @@ pff pthreads(ll n, int m, int k, const int num_threads) {
 }
 
 pff pthreads_test(ll n, int m, int k) {
-    return pthreads(n,m,k,32); 
+    return pthreads(n,m,k, get_nprocs_conf()); 
 }
 
+/*
 int main() {
     double porcentagem_acerto = testa_corretude(50, 32000000, 5e-3, pthreads_test, true);
     printf("Acerto: %lf%%\n", porcentagem_acerto * 100.0);
 }
+*/

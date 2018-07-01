@@ -64,6 +64,9 @@ __global__ void partial_sum(int n, int m, int k, float *sum_block, float *sum2_b
 
 pff gpu(ll n, int m, int k) {
 	int num_blocks = 1024;
+    if(n < 1024 * 64) {
+        n = 1024 * 64;
+    }
 
     float *d_sum_block;
     float *d_sum2_block;

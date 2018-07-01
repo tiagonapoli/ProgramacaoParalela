@@ -1,18 +1,24 @@
-all: sequencial pthreads gpu
+all: sequencial pthreads gpu main
 
 CC=g++ -Wall -pthread 
 
-sequencial: sequencial.o utils.o
-	$(CC) $^ -o $@
+main: main.o utils.o sequencial.o pthreads.o 
+	mpic++ -pthread $^ -o $@
+
+main.o: main.cpp
+	$(CC) -c $^ 
+
+#sequencial: sequencial.o utils.o
+#	$(CC) $^ -o $@
 
 sequencial.o: sequencial.cpp
 	$(CC) -c $^ 
 
-pthreads: pthreads.o utils.o
-	$(CC) $^ -o $@
+#pthreads: pthreads.o utils.o
+#	$(CC) $^ -o $@
 
-pthreads.o: pthreads.cpp
-	$(CC) -c $^ 
+pthreads.o: pthreads.cpp pthreads.h
+	$(CC) -c pthreads.cpp 
 
 utils.o: utils.cpp utils.h
 	$(CC) -c utils.cpp 

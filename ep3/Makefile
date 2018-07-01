@@ -2,11 +2,11 @@ all: sequencial pthreads gpu main
 
 CC=g++ -Wall -pthread 
 
-main: main.o utils.o sequencial.o pthreads.o 
-	mpic++ -pthread $^ -o $@
+main: main.o utils.o sequencial.o pthreads.o gpu.o 
+	mpic++ -pthread -lcudart -L /usr/local/cuda/lib64/ $^ -o $@
 
 main.o: main.cpp
-	$(CC) -c $^ 
+	mpic++ -c $^ 
 
 #sequencial: sequencial.o utils.o
 #	$(CC) $^ -o $@
@@ -23,8 +23,11 @@ pthreads.o: pthreads.cpp pthreads.h
 utils.o: utils.cpp utils.h
 	$(CC) -c utils.cpp 
 
-gpu: gpu.cu utils.o
-	nvcc -I inc/ -o gpu gpu.cu utils.o
+gpu: gpu.o utils.o
+	nvcc -o gpu gpu.o utils.o
+
+gpu.o: gpu.cu gpu.h
+	nvcc -I inc/ -c gpu.cu
 
 clean:
 	rm *.o main sequencial pthreads gpu

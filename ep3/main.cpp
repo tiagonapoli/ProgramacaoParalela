@@ -1,6 +1,7 @@
 #include <mpi.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "gpu.h"
 #include "utils.h"
 #include "pthreads.h"
 #include "sequencial.h"

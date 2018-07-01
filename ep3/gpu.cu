@@ -100,8 +100,9 @@ pff gpu(ll n, int m, int k) {
 
     return calc_res(n, sum, sum2);
 }
-
+/*
 int main() {
     double porcentagem_acerto = testa_corretude(100, 3200000000, 5e-3, gpu, true);
     printf("Acerto: %lf%%\n", porcentagem_acerto * 100.0);
 }
+*/

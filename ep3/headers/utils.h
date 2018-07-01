@@ -38,3 +38,5 @@ pff calc_res(ll n, float sum, float sum2);
 void solve(ll n, int m, int k, pff (*func_to_test)(ll, int, int), const char* print_string);
 
 void read(int argc, char **argv, ll &n, int &m, int &k);
+
+ll choose_optimum_distribution(ll n, int m, int k);

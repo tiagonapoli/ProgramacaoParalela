@@ -4,8 +4,6 @@
 #include "gpu.h"
 #include "utils.h"
 #include "pthreads.h"
-#include "sequencial.h"
-#include <sys/sysinfo.h>
 
 pff mpi_calc(ll n, int m, int k) {
 // Initialize the MPI environment

@@ -1,4 +1,4 @@
-#include "../headers/utils.h"
+#include "utils.h"
 
 //Cronometro - Functions
 void cronometro::set_initial_time() {

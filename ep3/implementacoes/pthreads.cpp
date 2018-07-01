@@ -73,9 +73,12 @@ pff pthreads_test(ll n, int m, int k) {
     return pthreads(n,m,k, get_nprocs_conf()); 
 }
 
-/*
-int main() {
-    double porcentagem_acerto = testa_corretude(50, 32000000, 5e-3, pthreads_test, true);
+
+void pthreads_tester() {
+    int tests = 10;
+    ll n = 32000000;
+    float eps = 5e-3;
+    printf("Testes: %d\nN: %lld\neps: %f\n\n", tests, n, eps);
+    double porcentagem_acerto = testa_corretude(tests, n, eps, pthreads_test, true);
     printf("Acerto: %lf%%\n", porcentagem_acerto * 100.0);
 }
-*/

@@ -89,7 +89,7 @@ void read(int argc, char **argv, ll &n, int &m, int &k) {
     sscanf(argv[2], "%d", &k);
     sscanf(argv[3], "%d", &m);
 }
-
+/*
 double run_time(ll num_points_to_gpu, ll n, int m, int k) {
     cronometro cron_gpu, cron_cpu;
     cron_gpu.set_initial_time();
@@ -98,9 +98,8 @@ double run_time(ll num_points_to_gpu, ll n, int m, int k) {
     cron_cpu.set_initial_time();
     pthreads(n - num_points_to_gpu, m, k);
     cron_cpu.set_final_time();
-    double total_time = cron_gpu.get_ms_past() + cron_cpu.get_ms_past();
-    printf("gpu(points, time) -> (%lld, %lf) cpu(points, time) -> (%lld, %lf)\n 
-    total_time: %lf ratio_time: %lf ratio_points %lf\n\n", num_points_to_gpu, 
+    double max_time = max(cron_gpu.get_ms_past(), cron_cpu.get_ms_past());
+    printf("gpu(points, time) -> (%lld, %lf)\ncpu(points, time) -> (%lld, %lf)\nmax_time: %lf ratio_points %lf\n\n", num_points_to_gpu, 
     cron_gpu.get_ms_past(), n - num_points_to_gpu, cron_cpu.get_ms_past(), 
     total_time, cron_gpu.get_ms_past() / total_time, (double)num_points_to_gpu / n);
     return total_time;
@@ -122,3 +121,4 @@ ll choose_optimum_distribution(ll n, int m, int k) {
             num_points_to_gpu = i;
     }
 }
+*/

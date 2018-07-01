@@ -1,5 +1,3 @@
-all: sequencial pthreads gpu main
-
 CC=g++ -Wall -pthread 
 
 main: main.o utils.o sequencial.o pthreads.o gpu.o 
@@ -8,26 +6,20 @@ main: main.o utils.o sequencial.o pthreads.o gpu.o
 main.o: main.cpp
 	mpic++ -c $^ 
 
-#sequencial: sequencial.o utils.o
-#	$(CC) $^ -o $@
-
-sequencial.o: sequencial.cpp
+sequencial.o: ./implementacoes/sequencial.cpp
 	$(CC) -c $^ 
 
-#pthreads: pthreads.o utils.o
-#	$(CC) $^ -o $@
-
-pthreads.o: pthreads.cpp pthreads.h
+pthreads.o: ./implementacoes/pthreads.cpp  ./headers/pthreads.h
 	$(CC) -c pthreads.cpp 
 
-utils.o: utils.cpp utils.h
-	$(CC) -c utils.cpp 
+utils.o: ./implementacoes/utils.cpp ./headers/utils.h
+	$(CC) -c ./implementacoes/utils.cpp 
 
 gpu: gpu.o utils.o
 	nvcc -o gpu gpu.o utils.o
 
-gpu.o: gpu.cu gpu.h
-	nvcc -I inc/ -c gpu.cu
+gpu.o: ./implementacoes/gpu.cu ./headers/gpu.h
+	nvcc -I inc/ -c ./implementacoes/gpu.cu
 
 clean:
 	rm *.o main sequencial pthreads gpu

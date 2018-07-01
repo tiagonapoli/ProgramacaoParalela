@@ -19,8 +19,11 @@ int main(int argc, char **argv) {
     sprintf(aux, "Tempo na CPU com %d threads em segundos: ", get_nprocs_conf());
     solve(n,m,k,pthreads_test, (const char*) aux);
     solve(n,m,k,sequencial,"Tempo sequencial em segundos: ");
-    return 0;
 
+    ll num_points_to_gpu = choose_optimum_distribution(n, m, k);
+    printf("best distribution %d\n", num_points_to_gpu);
+    // choosing the best distribution of points between cpu and gpu
+   
     /*
     // Initialize the MPI environment
     MPI_Init(NULL, NULL);

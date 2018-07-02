@@ -1,5 +1,6 @@
 FLAGS_NVCC = -I inc/ -I headers/  
-FLAGS = -Wall -pthread -I inc/ -I headers/ -lcudart -L /usr/local/cuda/lib64 
+CUDA_LIB64_PATH=/usr/local/cuda/lib64
+FLAGS = -Wall -pthread -I inc/ -I headers/ -lcudart -L $(CUDA_LIB64_PATH)  
 H_PATH=headers
 IMP_PATH=implementacoes
 

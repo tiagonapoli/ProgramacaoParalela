@@ -7,6 +7,10 @@
 
 const int SUM_TAG = 1;
 const int SUM2_TAG = 2;
+const int GPU_N_TAG = 3;
+const int N_TAG = 4;
+const int M_TAG = 5;
+const int K_TAG = 6;
 
 pff balanceado(ll n, int m, int k, float *sum, float *sum2) {
     
@@ -25,25 +29,34 @@ pff balanceado(ll n, int m, int k, float *sum, float *sum2) {
     if(my_rank == 0) {
 //MPI_Send(void* data, int count, MPI_Datatype datatype, int destination, int tag, MPI_Comm communicator)
 //MPI_Recv(void* data, int count, MPI_Datatype datatype, int source, int tag, MPI_Comm communicator, MPI_Status* status)
-        MPI_Send(&gpu_n, 1, MPI_LONG_LONG, 1, 0, MPI_COMM_WORLD);
-        MPI_Send(&n, 1, MPI_LONG_LONG, 1, 0, MPI_COMM_WORLD);
-        MPI_Send(&m, 1, MPI_INT, 1, 0, MPI_COMM_WORLD);
-        MPI_Send(&k, 1, MPI_INT, 1, 0, MPI_COMM_WORLD);
+        MPI_Send(&gpu_n, 1, MPI_LONG_LONG, 1, GPU_N_TAG, MPI_COMM_WORLD);
+        MPI_Send(&n, 1, MPI_LONG_LONG, 1, N_TAG, MPI_COMM_WORLD);
+        MPI_Send(&m, 1, MPI_INT, 1, M_TAG, MPI_COMM_WORLD);
+        MPI_Send(&k, 1, MPI_INT, 1, K_TAG, MPI_COMM_WORLD);
         
-        pthreads_test(cpu_n, m, k, &sum_0, &sum2_0);
-        
+		struct cronometro cron;
+		cron.set_initial_time();
+		pthreads_test(cpu_n, m, k, &sum_0, &sum2_0);
+        cron.set_final_time();
+		printf("PTHREADS %lf\n", cron.get_ms_past());
+
+
 		MPI_Recv(&sum_1, 1, MPI_FLOAT, 1, SUM_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
         MPI_Recv(&sum2_1, 1, MPI_FLOAT, 1, SUM2_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE); 
         
         *sum = sum_0 + sum_1;
         *sum2 = sum2_0 + sum2_1;
     } else if(my_rank == 1) {
-		MPI_Recv(&gpu_n, 1, MPI_LONG_LONG, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-		MPI_Recv(&n, 1, MPI_LONG_LONG, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-		MPI_Recv(&m, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-		MPI_Recv(&k, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+		MPI_Recv(&gpu_n, 1, MPI_LONG_LONG, 0, GPU_N_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+		MPI_Recv(&n, 1, MPI_LONG_LONG, 0, N_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+		MPI_Recv(&m, 1, MPI_INT, 0, M_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+		MPI_Recv(&k, 1, MPI_INT, 0, K_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
+		struct cronometro cron;
+		cron.set_initial_time();
 		gpu(gpu_n, m, k, &sum_1, &sum2_1);
+        cron.set_final_time();
+		printf("GPU %lf\n", cron.get_ms_past());
         
 		MPI_Send(&sum_1, 1, MPI_FLOAT, 0, SUM_TAG, MPI_COMM_WORLD);
         MPI_Send(&sum2_1, 1, MPI_FLOAT, 0, SUM2_TAG, MPI_COMM_WORLD);
@@ -59,7 +72,7 @@ void balanceado_tester() {
 	bool verbose = false;
 	if(my_rank == 0) verbose = true;
 	int tests = 10;
-    ll n = 5e10;
+    ll n = 5e9;
     float eps = 5e-3;
     if(verbose) printf("Testes: %d\nN: %lld\neps: %f\n\n", tests, n, eps);
     double porcentagem_acerto = testa_corretude(tests, n, eps, balanceado, verbose);

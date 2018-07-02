@@ -31,11 +31,11 @@ inline float calcula_erro_resposta(float result, int m, int k) {
     return fabs(result);
 }
 
-double testa_corretude(int testes, ll iter, float eps, pff (*func_to_test)(ll, int, int), bool verbose);
+double testa_corretude(int testes, ll iter, float eps, pff (*func_to_test)(ll, int, int, float*, float*), bool verbose);
 
 pff calc_res(ll n, float sum, float sum2);
 
-void solve(ll n, int m, int k, pff (*func_to_test)(ll, int, int), const char* print_string);
+void solve(ll n, int m, int k, pff (*func_to_test)(ll, int, int, float*, float*), const char* print_string);
 
 void read(int argc, char **argv, ll &n, int &m, int &k);
 

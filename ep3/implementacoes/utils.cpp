@@ -39,9 +39,10 @@ inline int random_in_range(int a, int b) {
 
 void solve(ll n, int m, int k, pff (*func_to_test)(ll, int, int, float*, float*), const char* print_string) {
     struct cronometro cron;
+	float sum, sum2;
     double minus_error, plus_error;
     cron.set_initial_time();
-    pff ans = (*func_to_test)(n, m, k);
+    pff ans = (*func_to_test)(n, m, k, &sum, &sum2);
     cron.set_final_time();
     minus_error = calcula_erro_resposta(ans.second, m, k);
     plus_error = calcula_erro_resposta(ans.first, m, k);

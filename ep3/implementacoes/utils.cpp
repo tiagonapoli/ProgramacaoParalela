@@ -37,7 +37,7 @@ inline int random_in_range(int a, int b) {
     return a + rand() % (b-a+1);
 }
 
-void solve(ll n, int m, int k, pff (*func_to_test)(ll, int, int), const char* print_string) {
+void solve(ll n, int m, int k, pff (*func_to_test)(ll, int, int, float*, float*), const char* print_string) {
     struct cronometro cron;
     double minus_error, plus_error;
     cron.set_initial_time();
@@ -50,7 +50,7 @@ void solve(ll n, int m, int k, pff (*func_to_test)(ll, int, int), const char* pr
     printf("Erro no calculo com a subtracao: %lf\n\n", minus_error);
 }
 
-double testa_corretude(int testes, ll iter, float eps, pff (*func_to_test)(ll, int, int), bool verbose=false) {
+double testa_corretude(int testes, ll iter, float eps, pff (*func_to_test)(ll, int, int, float*, float*), bool verbose=false) {
     int qtd_bom, qtd_ruim, k, m;
     float minus_error, plus_error;
     pff ans;
@@ -59,12 +59,13 @@ double testa_corretude(int testes, ll iter, float eps, pff (*func_to_test)(ll, i
     
     struct cronometro cron;
 
+    float sum, sum2;
     for(int i=0;i<testes;i++) {
         k = random_operation_sign() * random_in_range(0,100);
         m = random_operation_sign() * random_in_range(0,100); 
         
         cron.set_initial_time();
-        pff ans = (*func_to_test)(iter, m, k);
+        pff ans = (*func_to_test)(iter, m, k, &sum, &sum2);
         cron.set_final_time();
 
         minus_error = calcula_erro_resposta(ans.second, m, k);

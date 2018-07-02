@@ -1,10 +1,10 @@
 #include "utils.h"
 
 
-pff sequencial(ll n, int m, int k) {
+pff sequencial(ll n, int m, int k, float* sum, float* sum2) {
     srand(time(NULL));
-    float sum = 0.;
-    float sum2 = 0.;
+    (*sum) = 0.;
+    (*sum2) = 0.;
     float x, f_x;
     int aux;
     for (ll i = 0; i < n; i++) {
@@ -12,11 +12,11 @@ pff sequencial(ll n, int m, int k) {
         while(aux == 0) aux = rand();
         x = (aux / (2.0 * (float)RAND_MAX));
         f_x = f(m, k, x);
-        sum += f_x;
-        sum2 += f_x * f_x;
+        (*sum) += f_x;
+        (*sum2) += f_x * f_x;
     }
 
-    return calc_res(n, sum, sum2);
+    return calc_res(n, *sum, *sum2);
 }
 
 

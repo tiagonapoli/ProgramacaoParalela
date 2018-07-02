@@ -38,7 +38,7 @@ void *worker(void *thread_arg) {
     pthread_exit(NULL);
 }
 
-pff pthreads(ll n, int m, int k, const int num_threads) {
+pff pthreads(ll n, int m, int k, const int num_threads, float* sum, float* sum2) {
     pthread_t threads[num_threads];
     thread_data td[num_threads];
     srand(time(NULL));
@@ -60,17 +60,18 @@ pff pthreads(ll n, int m, int k, const int num_threads) {
 		}
 	}
 
-    float sum = 0., sum2 = 0.;
+    (*sum) = 0.; 
+    (*sum2) = 0.;
     for (int i = 0; i < num_threads; i++) {
-        sum += td[i].sum;
-        sum2 += td[i].sum2;
+        (*sum) += td[i].sum;
+        (*sum2) += td[i].sum2;
     }
 
-    return calc_res(n, sum, sum2);
+    return calc_res(n, *sum, *sum2);
 }
 
-pff pthreads_test(ll n, int m, int k) {
-    return pthreads(n,m,k, get_nprocs_conf()); 
+pff pthreads_test(ll n, int m, int k, float* sum, float* sum2) {
+    return pthreads(n,m,k, get_nprocs_conf(), sum, sum2); 
 }
 
 

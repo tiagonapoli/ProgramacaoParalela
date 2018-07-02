@@ -62,11 +62,8 @@ __global__ void partial_sum(int n, int m, int k, float *sum_block, float *sum2_b
 	}
 }
 
-pff gpu(ll n, int m, int k) {
+pff gpu(ll n, int m, int k, float* sum, float* sum2) {
 	int num_blocks = 1024;
-    if(n < 1024 * 64) {
-        n = 1024 * 64;
-    }
 
     float *d_sum_block;
     float *d_sum2_block;
@@ -86,11 +83,11 @@ pff gpu(ll n, int m, int k) {
 	checkCudaErrors(cudaMemcpy(h_sum_block, d_sum_block, num_blocks*sizeof(float), cudaMemcpyDeviceToHost));
 	checkCudaErrors(cudaMemcpy(h_sum2_block, d_sum2_block, num_blocks*sizeof(float), cudaMemcpyDeviceToHost));
 
-    float sum = 0.;
-    float sum2 = 0.;
+    (*sum) = 0.;
+    (*sum2) = 0.;
     for (int i = 0; i < num_blocks; i++) {
-        sum += h_sum_block[i];
-        sum2 += h_sum2_block[i];
+        (*sum) += h_sum_block[i];
+        (*sum2) += h_sum2_block[i];
     }
 
 	checkCudaErrors(cudaFree(d_sum_block));
@@ -98,7 +95,7 @@ pff gpu(ll n, int m, int k) {
 	free(h_sum_block);
     free(h_sum2_block);
 
-    return calc_res(n, sum, sum2);
+    return calc_res(n, *sum, *sum2);
 }
 
 void gpu_tester() {

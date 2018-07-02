@@ -19,7 +19,7 @@ pff balanceado(ll n, int m, int k, float *sum, float *sum2) {
     sum_0 = sum_1 = sum2_0 = sum2_1 = 0.0;
 
     // Initialize the MPI environment
-    MPI_Init(NULL, NULL);
+    //MPI_Init(NULL, NULL);
 
     // Find out rank, size
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);

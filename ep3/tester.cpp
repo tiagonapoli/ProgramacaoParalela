@@ -5,8 +5,25 @@
 #include "sequencial.h"
 
 int main(int argc, char **argv) {
-    printf("Flags:\n-s: Sequential tester\n-g: GPU tester\n-b: Balancing tester\n-p: Pthreads tester\n\n");
+
+    int my_rank, world_size;
+
+    // Initialize the MPI environment
+    MPI_Init(NULL, NULL);
+
+    // Find out rank, size
+    MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &world_size);
+
+    // We are assuming 2 processes for this task
+    if (world_size != 2) {
+        fprintf(stderr, "O numero de computadores deve ser 2\n");
+        MPI_Abort(MPI_COMM_WORLD, 1);
+    }
+
+    if(my_rank) == 0) printf("Flags:\n-s: Sequential tester\n-g: GPU tester\n-b: Balancing tester\n-p: Pthreads tester\n\n");
     for(int i=0;i<argc;i++) {
+        if(my_rank == 1 and strlen(argv[i]) >= 2 and argv[i][1] != 'b') continue;
         if(strlen(argv[i]) >= 2) {
             switch (argv[i][1]) {
                 case 's':

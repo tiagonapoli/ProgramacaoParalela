@@ -18,18 +18,9 @@ pff balanceado(ll n, int m, int k, float *sum, float *sum2) {
 	gpu_n = n - cpu_n;
     sum_0 = sum_1 = sum2_0 = sum2_1 = 0.0;
 
-    // Initialize the MPI environment
-    //MPI_Init(NULL, NULL);
-
     // Find out rank, size
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
     MPI_Comm_size(MPI_COMM_WORLD, &world_size);
-    
-	// We are assuming 2 processes for this task
-    if (world_size != 2) {
-        fprintf(stderr, "O numero de computadores deve ser 2\n");
-        MPI_Abort(MPI_COMM_WORLD, 1);
-    }
 
     if(my_rank == 0) {
 //MPI_Send(void* data, int count, MPI_Datatype datatype, int destination, int tag, MPI_Comm communicator)

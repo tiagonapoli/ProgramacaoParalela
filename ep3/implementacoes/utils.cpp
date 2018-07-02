@@ -37,7 +37,7 @@ inline int random_in_range(int a, int b) {
     return a + rand() % (b-a+1);
 }
 
-void solve(ll n, int m, int k, pff (*func_to_test)(ll, int, int, float*, float*), const char* print_string) {
+void solve(ll n, int m, int k, pff (*func_to_test)(ll, int, int, float*, float*), const char* print_string, verbose) {
     struct cronometro cron;
 	float sum, sum2;
     double minus_error, plus_error;
@@ -46,9 +46,11 @@ void solve(ll n, int m, int k, pff (*func_to_test)(ll, int, int, float*, float*)
     cron.set_final_time();
     minus_error = calcula_erro_resposta(ans.second, m, k);
     plus_error = calcula_erro_resposta(ans.first, m, k);
-    printf("%s %lf\n", print_string,cron.get_s_past());
-    printf("Erro no calculo com a soma: %lf\n", plus_error);
-    printf("Erro no calculo com a subtracao: %lf\n\n", minus_error);
+    if(verbose) {
+        printf("%s %lf\n", print_string,cron.get_s_past());
+        printf("Erro no calculo com a soma: %lf\n", plus_error);
+        printf("Erro no calculo com a subtracao: %lf\n\n", minus_error);
+    }
 }
 
 double testa_corretude(int testes, ll iter, float eps, pff (*func_to_test)(ll, int, int, float*, float*), bool verbose=false) {

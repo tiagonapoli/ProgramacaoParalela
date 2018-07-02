@@ -13,8 +13,8 @@ make tester -> Cria o programa tester, que serve para fazer testes simples de co
 
 -----Execucao da main-----
 A execucao da main deve ser feita com mpirun, usando dois computadores. Os testes na rede linux foram feitos usando:
-mpirun -n 2 main 
-(Essa execução não usa de fato 2 computadores, mas simula-os com 2 threads, a fim de testar a implementação MPI)
+mpirun -n 2 main N k m 
+(Essa execução não usa de fato 2 computadores, mas simula-os com 2 threads, a fim de testar a implementação MP
 
 
 

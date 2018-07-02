@@ -7,6 +7,7 @@
 #include<ctime>
 #include <chrono>
 using namespace std;
+
 typedef pair<float, float> pff;
 typedef long long ll;
 const float PI = acos(-1);
@@ -31,11 +32,11 @@ inline float calcula_erro_resposta(float result, int m, int k) {
     return fabs(result);
 }
 
-double testa_corretude(int testes, ll iter, float eps, pff (*func_to_test)(ll, int, int, float*, float*), bool verbose);
+double testa_corretude(int testes, ll iter, float eps, pff (*func_to_test)(ll, int, int, float*, float*, ll*), bool verbose);
 
 pff calc_res(ll n, float sum, float sum2);
 
-void solve(ll n, int m, int k, pff (*func_to_test)(ll, int, int, float*, float*), const char* print_string, bool verbose);
+void solve(ll n, int m, int k, pff (*func_to_test)(ll, int, int, float*, float*, ll*), const char* print_string, bool verbose);
 
 void read(int argc, char **argv, ll &n, int &m, int &k);
 

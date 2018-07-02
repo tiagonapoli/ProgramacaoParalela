@@ -25,12 +25,12 @@ int main(int argc, char **argv) {
         MPI_Abort(MPI_COMM_WORLD, 1);
     }
 
+	//Desconsidera a primeira execucao na gpu, ela geralmente eh mais lenta
+	if(my_rank == 0) solve(1e7,1,1,gpu,"Tempo na GPU com uma thread na CPU em segundos: ", false);
+
     ll n;
     int m,k;
     
-	//Desconsidera a primeira execucao na gpu, ela geralmente eh mais lenta
-	if(my_rank == 0) solve(1000000,1,1,gpu,"Tempo na GPU com uma thread na CPU em segundos: ", false);
-i
 
     if(my_rank == 0) read(argc,argv,n,m,k);
     solve(n,m,k,balanceado,"Tempo com balanceamento de carga em segundos: ", (my_rank == 0));

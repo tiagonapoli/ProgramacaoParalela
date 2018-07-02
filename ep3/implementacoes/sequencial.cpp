@@ -1,8 +1,9 @@
 #include "utils.h"
 
 
-pff sequencial(ll n, int m, int k, float* sum, float* sum2) {
-    srand(time(NULL));
+pff sequencial(ll n, int m, int k, float* sum, float* sum2, ll *new_n) {
+    *new_n = n;
+	srand(time(NULL));
     (*sum) = 0.;
     (*sum2) = 0.;
     float x, f_x;

@@ -1,52 +1,41 @@
-#include "utils.h"
+#include "gpu.h"
 #include <helper_cuda.h>
 #include <cuda.h>
 #include <curand_kernel.h>
+typedef float __precision;
 
-const int NUM_THREADS = 64;
-
-__constant__ float d_PI = 3.14159265359;
-__device__ inline float f_device(int m, int k, float x) {
+__constant__ __precision d_PI = 3.14159265359;
+__device__ inline __precision f_device(int m, int k, __precision x) {
     return sin((2 * m + 1) * d_PI * x) * cos(2 * d_PI * k * x) / sin(d_PI * x);
 }
 
-__global__ void partial_sum(int n, int m, int k, float *sum_block, float *sum2_block) {
-	//vetor com sizeof(int) * BLOCK_SIZE
-    // mutex
-    //__shared__ int *mutex_block = 0;
-    //__shared__ float res_block = 0;
-    // reduce
-    __shared__ float sum[NUM_THREADS];
-    __shared__ float sum2[NUM_THREADS];
+__global__ void partial_sum(ll n, int m, int k, __precision *sum_block, __precision *sum2_block) {
+    
+	__shared__ __precision sum[GPU_THREADS];
+    __shared__ __precision sum2[GPU_THREADS];
 
 	int tid = threadIdx.x;
-	//printf("%d -> %d responsible: %d\n", threadIdx.x + blockIdx.x * blockDim.x, blockIdx.x, (n+NUM_THREADS-1)/NUM_THREADS);
+	//printf("%d -> %d responsible: %lld\n", threadIdx.x + blockIdx.x * blockDim.x, blockIdx.x, (n+GPU_THREADS-1LL)/GPU_THREADS);
     curandState state;
-    /* Each thread gets same seed, a different sequence number, no offset. */
-    curand_init(0, NUM_THREADS * blockIdx.x + threadIdx.x, 0, &state);	
+    curand_init((unsigned long long) clock() + 279LL*(threadIdx.x + blockIdx.x * blockDim.x) , 0, 0, &state);	
 
-    float sum_thread = 0.;
-    float sum2_thread = 0.;
-    float x, f_x;
-    for (int i = 0; i < (n + NUM_THREADS - 1) / NUM_THREADS; i++) {
+    __precision sum_thread = 0.;
+    __precision sum2_thread = 0.;
+    __precision x, f_x;
+    for (ll i = 0; i < (n + GPU_THREADS - 1LL) / GPU_THREADS; i++) {
         x = curand_uniform(&state) / 2.0;
         f_x = f_device(m, k, x);
         sum_thread += f_x;
         sum2_thread += f_x * f_x;
     }    
 
-    // compute block answer using mutex
-    /*while(atomicCAS(mutex_block,0,1) != 0);  //lock
-    res_block += calc_res_device(n, sum_thread, sum2_thread);
-    atomicExch(mutex_block, 0);  //unlock*/
-	
     //compute block answer putting answer of each thread of the block in a 
     //array and then applying reduce at it
     sum[tid] = sum_thread;
     sum2[tid] = sum2_thread;
     __syncthreads();
 
-    for (int i = NUM_THREADS / 2; i > 0; i = i / 2) {
+    for (int i = GPU_THREADS / 2; i > 0; i = i / 2) {
         if (threadIdx.x >= i) return;
         sum[threadIdx.x] += sum[i + threadIdx.x];
         sum2[threadIdx.x] += sum2[i + threadIdx.x];
@@ -54,41 +43,48 @@ __global__ void partial_sum(int n, int m, int k, float *sum_block, float *sum2_b
     }
 
 	if(tid == 0) {
-        // atomic
-		//block_res[blockIdx.x] = res_block;
-        // reduce 
         sum_block[blockIdx.x] = sum[0];
         sum2_block[blockIdx.x] = sum2[0];
 	}
 }
 
-pff gpu(ll n, int m, int k, float* sum, float* sum2) {
-	int num_blocks = 1024;
+pff gpu(ll n, int m, int k, float* sum, float* sum2, ll *new_n) {
+	int num_blocks = 1;
+	for(ll i=2;i<=1024;i++) {
+		if(n / (i * GPU_THREADS) >= 100) num_blocks = i;
+	}
 
-    float *d_sum_block;
-    float *d_sum2_block;
-    float *h_sum_block;
-    float *h_sum2_block;
-	checkCudaErrors(cudaMalloc(&d_sum_block, num_blocks * sizeof(float)));
-	checkCudaErrors(cudaMalloc(&d_sum2_block, num_blocks * sizeof(float)));
-    h_sum_block = (float *)calloc(num_blocks, sizeof(float));
-    h_sum2_block = (float *)calloc(num_blocks, sizeof(float));
+	ll total_threads = GPU_THREADS * num_blocks;
+	*new_n = ((n + total_threads -1)/total_threads) * total_threads;
+	n = *new_n;	
 
-	checkCudaErrors(cudaMemcpy(d_sum_block, h_sum_block, num_blocks * sizeof(float),cudaMemcpyHostToDevice));
-	checkCudaErrors(cudaMemcpy(d_sum2_block, h_sum2_block, num_blocks * sizeof(float),cudaMemcpyHostToDevice));
-	partial_sum<<<num_blocks, NUM_THREADS>>>((n + num_blocks - 1) / num_blocks, m, k, d_sum_block, d_sum2_block);
+    __precision *d_sum_block;
+    __precision *d_sum2_block;
+    __precision *h_sum_block;
+    __precision *h_sum2_block;
+	checkCudaErrors(cudaMalloc(&d_sum_block, num_blocks * sizeof(__precision)));
+	checkCudaErrors(cudaMalloc(&d_sum2_block, num_blocks * sizeof(__precision)));
+    h_sum_block = (__precision *)calloc(num_blocks, sizeof(__precision));
+    h_sum2_block = (__precision *)calloc(num_blocks, sizeof(__precision));
+
+	checkCudaErrors(cudaMemcpy(d_sum_block, h_sum_block, num_blocks * sizeof(__precision),cudaMemcpyHostToDevice));
+	checkCudaErrors(cudaMemcpy(d_sum2_block, h_sum2_block, num_blocks * sizeof(__precision),cudaMemcpyHostToDevice));
+	partial_sum<<<num_blocks, GPU_THREADS>>>(n / num_blocks, m, k, d_sum_block, d_sum2_block);
 	cudaDeviceSynchronize();
 	
 	checkCudaErrors(cudaGetLastError());
-	checkCudaErrors(cudaMemcpy(h_sum_block, d_sum_block, num_blocks*sizeof(float), cudaMemcpyDeviceToHost));
-	checkCudaErrors(cudaMemcpy(h_sum2_block, d_sum2_block, num_blocks*sizeof(float), cudaMemcpyDeviceToHost));
+	checkCudaErrors(cudaMemcpy(h_sum_block, d_sum_block, num_blocks*sizeof(__precision), cudaMemcpyDeviceToHost));
+	checkCudaErrors(cudaMemcpy(h_sum2_block, d_sum2_block, num_blocks*sizeof(__precision), cudaMemcpyDeviceToHost));
 
-    (*sum) = 0.;
-    (*sum2) = 0.;
+	double aux1, aux2;
+	aux1 = aux2 = 0;
     for (int i = 0; i < num_blocks; i++) {
-        (*sum) += h_sum_block[i];
-        (*sum2) += h_sum2_block[i];
+		aux1 += h_sum_block[i];
+		aux2 += h_sum2_block[i];
     }
+	(*sum) = (float)aux1;
+	(*sum2) = (float)aux2;
+
 
 	checkCudaErrors(cudaFree(d_sum_block));
 	checkCudaErrors(cudaFree(d_sum2_block));

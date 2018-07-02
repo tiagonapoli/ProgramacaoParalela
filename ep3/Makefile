@@ -1,6 +1,6 @@
 FLAGS_NVCC = -I inc/ -I headers/  
-#FLAGS = -Wall -pthread -I inc/ -I headers/ -lcudart -L /usr/local/cuda/lib64 
-FLAGS = -Wall -pthread -I inc/ -I headers/  
+FLAGS = -Wall -pthread -I inc/ -I headers/ -lcudart -L /usr/local/cuda/lib64 
+#FLAGS = -Wall -pthread -I inc/ -I headers/  
 
 
 H_PATH=headers
@@ -9,7 +9,7 @@ IMP_PATH=implementacoes
 tester: tester.cpp pthreads.o utils.o sequencial.o balanceado.o gpu.o
 	mpic++ $(FLAGS) $^ -o $@
 
-main: main.cpp utils.o sequencial.o pthreads.o gpu.o 
+main: main.cpp utils.o sequencial.o pthreads.o gpu.o balanceado.o 
 	mpic++ $(FLAGS) $^ -o $@
 
 

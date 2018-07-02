@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
     ll n;
     int m,k;
     read(argc,argv,n,m,k);
-    solve(n,m,k,mpi_calc,"Tempo com balanceamento de carga em segundos: ");
+    solve(n,m,k,balanceado,"Tempo com balanceamento de carga em segundos: ");
     solve(n,m,k,gpu,"Tempo na GPU com uma thread na CPU em segundos: ");
     char aux[100];
     sprintf(aux, "Tempo na CPU com %d threads em segundos: ", get_nprocs_conf());

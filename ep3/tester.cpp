@@ -1,6 +1,6 @@
 #include <string.h>
 #include "balanceado.h"
-//#include "gpu.h"
+#include "gpu.h"
 #include "pthreads.h"
 #include "sequencial.h"
 
@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
                     break;
                 case 'g':
                     printf("*************** GPU *******************\n");
-//                    gpu_tester();
+                    gpu_tester();
                     printf("********************************************\n\n");  
                     break;
                 case 'b':

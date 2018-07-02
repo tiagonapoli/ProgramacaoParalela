@@ -37,7 +37,7 @@ inline int random_in_range(int a, int b) {
     return a + rand() % (b-a+1);
 }
 
-void solve(ll n, int m, int k, pff (*func_to_test)(ll, int, int, float*, float*), const char* print_string, verbose) {
+void solve(ll n, int m, int k, pff (*func_to_test)(ll, int, int, float*, float*), const char* print_string, bool verbose) {
     struct cronometro cron;
 	float sum, sum2;
     double minus_error, plus_error;

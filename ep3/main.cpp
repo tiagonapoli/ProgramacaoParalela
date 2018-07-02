@@ -1,3 +1,4 @@
+#include <mpi.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "balanceado.h"
@@ -26,7 +27,7 @@ int main(int argc, char **argv) {
 
     ll n;
     int m,k;
-    read(argc,argv,n,m,k);
+    if(my_rank == 0) read(argc,argv,n,m,k);
     solve(n,m,k,balanceado,"Tempo com balanceamento de carga em segundos: ", (my_rank == 0));
     if(my_rank == 0) {
         solve(n,m,k,gpu,"Tempo na GPU com uma thread na CPU em segundos: ", true);

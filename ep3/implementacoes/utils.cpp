@@ -77,7 +77,7 @@ double testa_corretude(int testes, ll iter, float eps, pff (*func_to_test)(ll, i
         if(verbose) printf("==== Teste %d ====\nm: %d\nk: %d\nResultPlus : %9lf [%9lf]\nResultMinus: %9lf [%9lf]\nTempo: %lf ms\n\n",i,m,k,ans.first, plus_error, ans.second, minus_error, cron.get_ms_past());
     }
 
-    printf("==Fim==\nErrados: %d\nCertos: %d\n", qtd_ruim, qtd_bom);
+    if(verbose) printf("==Fim==\nErrados: %d\nCertos: %d\n", qtd_ruim, qtd_bom);
     return ((double)qtd_bom) / (double)(qtd_bom + qtd_ruim);
 }
 

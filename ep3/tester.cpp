@@ -1,3 +1,4 @@
+#include <mpi.h>
 #include <string.h>
 #include "balanceado.h"
 #include "gpu.h"
@@ -21,7 +22,8 @@ int main(int argc, char **argv) {
         MPI_Abort(MPI_COMM_WORLD, 1);
     }
 
-    if(my_rank) == 0) printf("Flags:\n-s: Sequential tester\n-g: GPU tester\n-b: Balancing tester\n-p: Pthreads tester\n\n");
+
+    if(my_rank == 0) printf("Flags:\n-s: Sequential tester\n-g: GPU tester\n-b: Balancing tester\n-p: Pthreads tester\n\n");
     for(int i=0;i<argc;i++) {
         if(my_rank == 1 and strlen(argv[i]) >= 2 and argv[i][1] != 'b') continue;
         if(strlen(argv[i]) >= 2) {
@@ -37,9 +39,9 @@ int main(int argc, char **argv) {
                     printf("********************************************\n\n");  
                     break;
                 case 'b':
-                    printf("*************** BALANCING *******************\n");
+                    if(my_rank == 0) printf("*************** BALANCING *******************\n");
                     balanceado_tester();
-                    printf("********************************************\n\n"); 
+                    if(my_rank == 0) printf("********************************************\n\n"); 
                     break;
                 case 'p':
                     printf("*************** PTHREADS *******************\n");
@@ -48,5 +50,7 @@ int main(int argc, char **argv) {
                     break;		
 			}
         }
-    } 
+    }
+
+	MPI_Finalize();
 }
